@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pak Model Institute</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-primary: #121212;
+            --bg-secondary: #1E1E1E;
+            --accent: #00BFFF;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --border-radius: 12px;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--bg-secondary);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent), #0099CC);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 191, 255, 0.3);
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--accent), #FFFFFF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .datetime-container {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .master-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--accent), #0099CC);
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 15px rgba(0, 191, 255, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 191, 255, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+        }
+
+        .btn-outline:hover {
+            background: rgba(0, 191, 255, 0.1);
+        }
+
+        /* Side Menu Styles */
+        .side-menu {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            width: 250px;
+            height: calc(100vh - 80px);
+            background: linear-gradient(180deg, var(--bg-secondary), #2a2a2a);
+            padding: 1.5rem 0;
+            overflow-y: auto;
+            transition: var(--transition);
+            z-index: 900;
+            border-right: 1px solid #333;
+        }
+
+        .menu-item {
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border-left: 4px solid transparent;
+            margin: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        .menu-item:hover {
+            background: rgba(0, 191, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .menu-item.active {
+            background: rgba(0, 191, 255, 0.15);
+            border-left-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .menu-item i {
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--accent);
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            margin-left: 250px;
+            margin-top: 80px;
+            padding: 2rem;
+            max-width: 1200px;
+            transition: var(--transition);
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Card Styles */
+        .card {
+            background: var(--bg-secondary);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid #333;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            border-color: var(--accent);
+        }
+
+        .stat-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(135deg, var(--bg-secondary), #2a2a2a);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+            color: var(--accent);
+            text-shadow: 0 2px 10px rgba(0, 191, 255, 0.3);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Tiles Styles */
+        .tiles-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .tile {
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--bg-secondary), #2a2a2a);
+        }
+
+        .tile:hover {
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.1), var(--bg-secondary));
+        }
+
+        .tile i {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent);
+            text-shadow: 0 2px 10px rgba(0, 191, 255, 0.3);
+        }
+
+        /* Form Styles */
+        .form-container {
+            background: var(--bg-secondary);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid #333;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            border: 1px solid #333;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.1);
+        }
+
+        /* Table Styles */
+        .table-container {
+            background: var(--bg-secondary);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            overflow-x: auto;
+            border: 1px solid #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-secondary);
+        }
+
+        th, td {
+            padding: 1rem 1.2rem;
+            text-align: left;
+            border-bottom: 1px solid #333;
+        }
+
+        th {
+            background: rgba(0, 0, 0, 0.3);
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-small {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+        }
+
+        /* Attendance Toggles */
+        .attendance-toggle {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .toggle-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            border: 1px solid #333;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.8rem;
+        }
+
+        .toggle-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        /* Chart Container */
+        .chart-container {
+            background: var(--bg-secondary);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            height: 300px;
+            border: 1px solid #333;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .side-menu {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+
+            .side-menu.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-cards, .tiles-container {
+                grid-template-columns: 1fr;
+            }
+
+            header {
+                padding: 1rem;
+            }
+
+            .header-title {
+                font-size: 1.2rem;
+            }
+
+            .datetime-container {
+                font-size: 0.8rem;
+            }
+
+            .master-controls {
+                gap: 0.5rem;
+            }
+
+            .btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Utility Classes */
+        .text-center {
+            text-align: center;
+        }
+
+        .mb-1 {
+            margin-bottom: 1rem;
+        }
+
+        .mb-2 {
+            margin-bottom: 2rem;
+        }
+
+        .mt-1 {
+            margin-top: 1rem;
+        }
+
+        .mt-2 {
+            margin-top: 2rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            transform: translateY(-20px);
+            transition: var(--transition);
+            border: 1px solid #333;
+        }
+
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--accent);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #333;
+        }
+
+        /* Section Headers */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            background: linear-gradient(45deg, var(--accent), #FFFFFF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo-container">
+            <div class="menu-toggle">☰</div>
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h1 class="header-title">Pak Model Institute</h1>
+        </div>
+        <div class="datetime-container" id="datetime"></div>
+        <div class="master-controls">
+            <button class="btn" id="settings-btn">
+                <i class="fas fa-cog"></i> Master
+            </button>
+            <button class="btn btn-outline">
+                <i class="fas fa-user"></i> Admin
+            </button>
+        </div>
+    </header>
+
+    <!-- Side Menu -->
+    <nav class="side-menu">
+        <div class="menu-item active" data-section="dashboard">
+            <i class="fas fa-chart-bar"></i> Dashboard
+        </div>
+        <div class="menu-item" data-section="admissions">
+            <i class="fas fa-user-graduate"></i> Admissions
+        </div>
+        <div class="menu-item" data-section="teachers">
+            <i class="fas fa-chalkboard-teacher"></i> Teachers
+        </div>
+        <div class="menu-item" data-section="attendance">
+            <i class="fas fa-calendar-check"></i> Attendance
+        </div>
+        <div class="menu-item" data-section="fees">
+            <i class="fas fa-money-bill-wave"></i> Fees
+        </div>
+        <div class="menu-item" data-section="reports">
+            <i class="fas fa-chart-line"></i> Reports
+        </div>
+        <div class="menu-item" data-section="classes">
+            <i class="fas fa-school"></i> Manage Classes
+        </div>
+        <div class="menu-item" data-section="settings">
+            <i class="fas fa-cogs"></i> Settings
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="section active">
+            <div class="section-header">
+                <h2 class="section-title">Dashboard</h2>
+                <div class="datetime-container" id="dashboard-date"></div>
+            </div>
+            
+            <!-- Stat Cards -->
+            <div class="stat-cards">
+                <div class="card stat-card">
+                    <div class="stat-value" id="total-students">0</div>
+                    <div class="stat-label">Total Students</div>
+                </div>
+                <div class="card stat-card">
+                    <div class="stat-value" id="total-teachers">0</div>
+                    <div class="stat-label">Total Teachers</div>
+                </div>
+                <div class="card stat-card">
+                    <div class="stat-value" id="pending-fees">₹0</div>
+                    <div class="stat-label">Pending Fees</div>
+                </div>
+                <div class="card stat-card">
+                    <div class="stat-value" id="total-classes">0</div>
+                    <div class="stat-label">Active Classes</div>
+                </div>
+            </div>
+            
+            <!-- Quick Actions Tiles -->
+            <h3 class="mb-1">Quick Actions</h3>
+            <div class="tiles-container">
+                <div class="card tile" data-section="attendance">
+                    <i class="fas fa-calendar-check"></i>
+                    <div>Attendance</div>
+                </div>
+                <div class="card tile" data-section="admissions">
+                    <i class="fas fa-user-graduate"></i>
+                    <div>Admissions</div>
+                </div>
+                <div class="card tile" data-section="fees">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <div>Fees</div>
+                </div>
+                <div class="card tile" data-section="teachers">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <div>Teachers</div>
+                </div>
+                <div class="card tile" data-section="reports">
+                    <i class="fas fa-chart-line"></i>
+                    <div>Reports</div>
+                </div>
+                <div class="card tile" data-section="classes">
+                    <i class="fas fa-school"></i>
+                    <div>Manage Classes</div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card mt-2">
+                <h3 class="mb-1">Recent Activity</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Activity</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recent-activity">
+                            <!-- Recent activities will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Other sections will be added here with similar structure -->
+        <section id="admissions" class="section">
+            <div class="section-header">
+                <h2 class="section-title">Student Admissions</h2>
+                <button class="btn" id="new-admission-btn">
+                    <i class="fas fa-plus"></i> New Admission
+                </button>
+            </div>
+            <!-- Admissions content will go here -->
+        </section>
+
+        <section id="teachers" class="section">
+            <div class="section-header">
+                <h2 class="section-title">Teachers Management</h2>
+                <button class="btn" id="new-teacher-btn">
+                    <i class="fas fa-plus"></i> New Teacher
+                </button>
+            </div>
+            <!-- Teachers content will go here -->
+        </section>
+
+        <!-- Add other sections similarly -->
+
+    </main>
+
+    <!-- Modals -->
+    <div class="modal" id="confirmation-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirm Action</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmation-message">Are you sure you want to proceed?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancel-action">Cancel</button>
+                <button class="btn" id="confirm-action">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript code will be added here
+        // This will handle all the functionality
+        
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update date and time
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+            
+            // Initialize mobile menu
+            document.querySelector('.menu-toggle').addEventListener('click', function() {
+                document.querySelector('.side-menu').classList.toggle('active');
+            });
+            
+            // Initialize section navigation
+            document.querySelectorAll('.menu-item, .tile').forEach(item => {
+                item.addEventListener('click', function() {
+                    const sectionId = this.getAttribute('data-section');
+                    if (sectionId) {
+                        showSection(sectionId);
+                        document.querySelector('.side-menu').classList.remove('active');
+                    }
+                });
+            });
+        });
+
+        function updateDateTime() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            };
+            document.getElementById('datetime').textContent = now.toLocaleDateString('en-US', options);
+        }
+
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show the selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Update active menu item
+            document.querySelectorAll('.menu-item').forEach(menuItem => {
+                menuItem.classList.remove('active');
+            });
+            document.querySelector(`.menu-item[data-section="${sectionId}"]`).classList.add('active');
+        }
+    </script>
+</body>
+</html>
